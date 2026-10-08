@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Copy, Check, Trash2, ArrowRightLeft, Lock, Unlock } from "lucide-react";
+import { Copy, Check, Trash2, ArrowRightLeft, Lock, Unlock, ShieldAlert, Binary } from "lucide-react";
 
 export default function Base64ConverterPage() {
   const [inputText, setInputText] = useState("");
@@ -82,10 +82,11 @@ export default function Base64ConverterPage() {
       {/* Header SEO */}
       <header className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-2">
-          Online Base64 Encoder & Decoder
+          Online Base64 Encoder & Decoder with UTF-8 Support
         </h1>
         <p className="text-slate-600 max-w-2xl mx-auto text-sm md:text-base">
-          Encode plain text, tokens, and data into Base64 format or decode Base64 strings back to readable text with full UTF-8 support.
+          Encode plain text, binary assets, and credentials into Base64 format or decode Base64 strings back to readable UTF-8 text instantly. 
+          Client-side execution for strict confidentiality.
         </p>
       </header>
 
@@ -179,44 +180,157 @@ export default function Base64ConverterPage() {
         </div>
       </div>
 
-      {/* Contenido Editorial SEO */}
-      <article className="border-t border-slate-200 pt-10 text-slate-700 space-y-6">
-        <h2 className="text-2xl font-bold text-slate-900">
-          Understanding Base64 Encoding
-        </h2>
-        <p className="leading-relaxed">
-          Base64 is a binary-to-text encoding algorithm designed to represent binary data in an ASCII string format. It translates data into a radix-64 representation using 64 safe printable characters: uppercase English letters (A-Z), lowercase letters (a-z), numerals (0-9), and two symbols (+ and /), often padded with equal signs (=).
-        </p>
-        <p className="leading-relaxed">
-          Because certain network transport protocols (like HTTP headers, MIME email, or XML) were historically designed to handle plain text only, raw binary payloads or non-ASCII characters can become corrupted during transit. Base64 ensures that arbitrary bytes travel across systems intact.
-        </p>
+      {/* Contenido Editorial SEO & Técnico */}
+      <article className="border-t border-slate-200 pt-10 text-slate-700 space-y-10">
+        
+        {/* Sección 1: Qué es Base64 */}
+        <section className="space-y-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
+            What is Base64 Encoding and How Does It Function?
+          </h2>
+          <p className="leading-relaxed">
+            Base64 is a binary-to-text encoding scheme that converts arbitrary sequences of 8-bit bytes into a set of 64 ASCII-printable characters. Developed originally for email systems via MIME (Multipurpose Internet Mail Extensions), Base64 prevents data corruption when binary data travels across networks and protocols designed exclusively for plain text.
+          </p>
+          <p className="leading-relaxed">
+            The Base64 alphabet consists of 64 distinct characters: uppercase letters (<code>A-Z</code>), lowercase letters (<code>a-z</code>), numbers (<code>0-9</code>), plus symbols (<code>+</code> and <code>/</code>), with the equal sign (<code>=</code>) reserved for trailing byte padding.
+          </p>
+        </section>
 
-        <h3 className="text-xl font-bold text-slate-900">
-          Common Use Cases
-        </h3>
-        <ul className="list-disc pl-6 space-y-2">
-          <li><strong>API Authentication:</strong> Basic HTTP Authorization headers require credentials structured as <code>username:password</code> encoded in Base64.</li>
-          <li><strong>Data URLs:</strong> Embedding small SVGs or PNG images directly into HTML or CSS stylesheets without additional HTTP requests.</li>
-          <li><strong>Web Tokens:</strong> Header and payload sections of JSON Web Tokens (JWT) are serialized using URL-safe Base64.</li>
-        </ul>
+        {/* Sección 2: Guía Paso a Paso */}
+        <section className="space-y-4">
+          <h3 className="text-xl font-bold text-slate-900">
+            How to Use This Converter
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm mb-3">
+                1
+              </div>
+              <h4 className="font-semibold text-slate-900 mb-1">Enter Raw or Encoded Data</h4>
+              <p className="text-sm text-slate-600">
+                Paste your UTF-8 plain text, API authorization token, or Base64 string in the input area.
+              </p>
+            </div>
+            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm mb-3">
+                2
+              </div>
+              <h4 className="font-semibold text-slate-900 mb-1">Select Conversion Direction</h4>
+              <p className="text-sm text-slate-600">
+                Click <strong>Encode to Base64</strong> to serialize text, or <strong>Decode from Base64</strong> to reveal the original string.
+              </p>
+            </div>
+            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm mb-3">
+                3
+              </div>
+              <h4 className="font-semibold text-slate-900 mb-1">Copy or Swap</h4>
+              <p className="text-sm text-slate-600">
+                Use <strong>Copy Output</strong> to clipboard, or press <strong>Swap</strong> to invert inputs and outputs for quick back-and-forth testing.
+              </p>
+            </div>
+          </div>
+        </section>
 
-        <h3 className="text-xl font-bold text-slate-900">
-          Frequently Asked Questions (FAQ)
-        </h3>
-        <div className="space-y-4">
-          <div className="bg-white p-4 rounded-xl border border-slate-200">
-            <h4 className="font-semibold text-slate-900 mb-1">Is Base64 a form of encryption?</h4>
-            <p className="text-sm text-slate-600">
-              No. Base64 is strictly an <em>encoding</em> scheme, not encryption. It provides zero cryptographic security because anyone can decode a Base64 string instantly without a secret key. Never store raw passwords or sensitive credentials in Base64 without encrypting them first.
-            </p>
+        {/* Sección 3: Tabla Técnica de Bits */}
+        <section className="space-y-4">
+          <h3 className="text-xl font-bold text-slate-900">
+            How Base64 Mathematical Mapping Works
+          </h3>
+          <p className="text-sm text-slate-600">
+            Base64 groups binary data into chunks of 24 bits (3 bytes) and divides them into 4 groups of 6 bits. Each 6-bit index corresponds to a specific character from the Base64 index table:
+          </p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm border border-slate-200 rounded-lg overflow-hidden bg-white">
+              <thead className="bg-slate-100 text-slate-900 font-semibold border-b border-slate-200">
+                <tr>
+                  <th className="p-3">Character Group</th>
+                  <th className="p-3">Index Range</th>
+                  <th className="p-3">Binary Representation</th>
+                  <th className="p-3">Purpose</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200">
+                <tr>
+                  <td className="p-3 font-medium text-slate-900">A - Z</td>
+                  <td className="p-3">0 to 25</td>
+                  <td className="p-3"><code>000000 - 011001</code></td>
+                  <td className="p-3">Uppercase Alphabetical mapping</td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-medium text-slate-900">a - z</td>
+                  <td className="p-3">26 to 51</td>
+                  <td className="p-3"><code>011010 - 110011</code></td>
+                  <td className="p-3">Lowercase Alphabetical mapping</td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-medium text-slate-900">0 - 9</td>
+                  <td className="p-3">52 to 61</td>
+                  <td className="p-3"><code>110100 - 111101</code></td>
+                  <td className="p-3">Numerical values</td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-medium text-slate-900">+ and /</td>
+                  <td className="p-3">62 and 63</td>
+                  <td className="p-3"><code>111110 & 111111</code></td>
+                  <td className="p-3">Punctuation symbols (often replaced by - and _ in URL-safe Base64)</td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-medium text-slate-900">= (Padding)</td>
+                  <td className="p-3">N/A</td>
+                  <td className="p-3">Zero-padded bits</td>
+                  <td className="p-3">Appended when total input bytes are not divisible by 3</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div className="bg-white p-4 rounded-xl border border-slate-200">
-            <h4 className="font-semibold text-slate-900 mb-1">Does this converter support special characters and emojis?</h4>
-            <p className="text-sm text-slate-600">
-              Yes. Unlike standard JavaScript <code>btoa</code> implementations which fail on multibyte strings, our converter incorporates a full UTF-8 conversion layer, allowing seamless encoding and decoding of accented letters, international characters, and emojis.
-            </p>
+        </section>
+
+        {/* Sección 4: Base64 vs Encryption Warning */}
+        <section className="bg-amber-50 p-6 rounded-2xl border border-amber-200 space-y-3">
+          <div className="flex items-center gap-2 text-amber-900 font-bold text-lg">
+            <ShieldAlert className="w-5 h-5 text-amber-600" />
+            <span>Important Distinction: Base64 is Encoding, Not Encryption</span>
           </div>
-        </div>
+          <p className="text-sm leading-relaxed text-amber-900">
+            A common misconception in web development is treating Base64 as a method of securing private passwords or API secrets. 
+            Base64 does not use encryption keys or cryptographic hashing algorithms; anyone with access to an encoded string can decode it back to plain text instantly. Never rely on Base64 alone to protect private customer data.
+          </p>
+        </section>
+
+        {/* Sección 5: Preguntas Frecuentes (FAQ) */}
+        <section className="space-y-4">
+          <h3 className="text-xl font-bold text-slate-900">
+            Frequently Asked Questions (FAQ)
+          </h3>
+          <div className="space-y-3">
+            <div className="bg-white p-4 rounded-xl border border-slate-200">
+              <h4 className="font-semibold text-slate-900 mb-1">
+                Why does Base64 output increase the original file size?
+              </h4>
+              <p className="text-sm text-slate-600">
+                Because Base64 translates every 3 bytes (24 bits) of raw data into 4 characters (32 bits), it introduces an approximate <strong>33% overhead</strong> in string size. This trade-off is accepted to ensure complete compatibility across text-only protocols.
+              </p>
+            </div>
+            <div className="bg-white p-4 rounded-xl border border-slate-200">
+              <h4 className="font-semibold text-slate-900 mb-1">
+                How does this tool handle non-English characters and emojis?
+              </h4>
+              <p className="text-sm text-slate-600">
+                Standard browser <code>window.btoa</code> fails when evaluating characters beyond Latin1 (ASCII range). Our tool executes an intermediate UTF-8 encoding pipeline, enabling full compatibility with Spanish accents, Asian scripts, and modern emojis without throwing DOM exceptions.
+              </p>
+            </div>
+            <div className="bg-white p-4 rounded-xl border border-slate-200">
+              <h4 className="font-semibold text-slate-900 mb-1">
+                What does the equal sign (=) mean at the end of a Base64 string?
+              </h4>
+              <p className="text-sm text-slate-600">
+                The equal sign is padding. Because Base64 requires input bytes to be in multiples of 3, any remainder of 1 or 2 leftover bytes is padded with one or two <code>=</code> characters to align the final payload.
+              </p>
+            </div>
+          </div>
+        </section>
+
       </article>
     </div>
   );

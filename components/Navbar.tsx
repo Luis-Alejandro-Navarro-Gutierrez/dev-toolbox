@@ -14,6 +14,7 @@ export default function Navbar() {
           <Link href="/base64-converter" className="hover:text-blue-600 transition">Base64</Link>
           <Link href="/markdown-previewer" className="hover:text-blue-600 transition">Markdown</Link>
           <Link href="/sql-formatter" className="hover:text-blue-600 transition">SQL Formatter</Link>
+          <Link href="/jwt-decoder">JWT Decoder</Link>
         </div>
       </div>
     </nav>

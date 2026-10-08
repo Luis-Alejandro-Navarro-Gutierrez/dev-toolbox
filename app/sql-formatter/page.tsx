@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { format } from "sql-formatter";
-import { Copy, Check, Trash2, Database, Terminal } from "lucide-react";
+import { Copy, Check, Trash2, Database, ShieldCheck, Cpu } from "lucide-react";
 
 export default function SqlFormatterPage() {
   const [inputSql, setInputSql] = useState("");
@@ -58,7 +58,8 @@ export default function SqlFormatterPage() {
           Free Online SQL Query Formatter & Beautifier
         </h1>
         <p className="text-slate-600 max-w-2xl mx-auto text-sm md:text-base">
-          Format, beautify, and indent your SQL queries instantly. Supports standard SQL, PostgreSQL, MySQL, and SQLite dialect conventions.
+          Format, beautify, and indent your SQL queries instantly. Supports standard ANSI SQL, PostgreSQL, MySQL, and SQLite dialects. 
+          Processed 100% locally in your browser for zero database exposure.
         </p>
       </header>
 
@@ -80,9 +81,9 @@ export default function SqlFormatterPage() {
               onChange={(e) => setDialect(e.target.value as any)}
               className="bg-slate-50 border border-slate-300 rounded-lg text-sm px-3 py-1.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="sql">Standard SQL</option>
+              <option value="sql">Standard SQL (ANSI)</option>
               <option value="postgresql">PostgreSQL</option>
-              <option value="mysql">MySQL</option>
+              <option value="mysql">MySQL / MariaDB</option>
               <option value="sqlite">SQLite</option>
             </select>
           </div>
@@ -151,45 +152,156 @@ export default function SqlFormatterPage() {
         </div>
       </div>
 
-      {/* Contenido Editorial SEO */}
-      <article className="border-t border-slate-200 pt-10 text-slate-700 space-y-6">
-        <h2 className="text-2xl font-bold text-slate-900">
-          Why Should You Format SQL Queries?
-        </h2>
-        <p className="leading-relaxed">
-          Structured Query Language (SQL) statements are often generated automatically by ORMs (like Prisma, Hibernate, or Entity Framework) or written quickly during fast prototyping. Over time, queries that combine multiple JOIN operations, nested subqueries, and window functions become difficult to inspect and optimize without consistent styling.
-        </p>
-        <p className="leading-relaxed">
-          Standardizing SQL with uppercase keywords and structured clause indentation makes code reviews faster, simplifies performance tuning in query execution plans (EXPLAIN ANALYZE), and reduces syntax bugs across development teams.
-        </p>
+      {/* Contenido Editorial SEO & Técnico de Alto Valor */}
+      <article className="border-t border-slate-200 pt-10 text-slate-700 space-y-10">
+        
+        {/* Sección 1: Importancia de la legibilidad */}
+        <section className="space-y-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
+            Why Clean SQL Formatting Matters in Database Engineering
+          </h2>
+          <p className="leading-relaxed">
+            Structured Query Language (SQL) is the foundation of relational database management systems (RDBMS). While database query planners parse SQL into Abstract Syntax Trees (AST) regardless of spaces or line breaks, human engineers rely on visual structure to diagnose inefficient table joins, verify indexing conditions, and detect expensive full-table scans.
+          </p>
+          <p className="leading-relaxed">
+            Queries generated dynamically by Object-Relational Mappers (ORMs) such as Prisma, Hibernate, or Drizzle often produce monolithic, unformatted single-line statements. Using an automated SQL formatter transforms obscure database calls into standardized, maintainable statements suitable for code reviews and production migrations.
+          </p>
+        </section>
 
-        <h3 className="text-xl font-bold text-slate-900">
-          Key Formatting Rules Applied
-        </h3>
-        <ul className="list-disc pl-6 space-y-2">
-          <li><strong>Keyword capitalization:</strong> Reserved keywords such as <code>SELECT</code>, <code>FROM</code>, <code>WHERE</code>, <code>JOIN</code>, <code>GROUP BY</code>, and <code>ORDER BY</code> are automatically capitalized.</li>
-          <li><strong>Clause alignment:</strong> Each major SQL clause begins on a new line with systematic indentation.</li>
-          <li><strong>Multiple query separation:</strong> Scripts with multiple statements separated by semicolons are given clean double-line breaks.</li>
-          <li><strong>Dialect compatibility:</strong> Tailored support for PostgreSQL, MySQL, and SQLite identifier conventions.</li>
-        </ul>
+        {/* Sección 2: Guía Paso a Paso */}
+        <section className="space-y-4">
+          <h3 className="text-xl font-bold text-slate-900">
+            How to Use This SQL Formatter
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm mb-3">
+                1
+              </div>
+              <h4 className="font-semibold text-slate-900 mb-1">Paste Your Query</h4>
+              <p className="text-sm text-slate-600">
+                Paste any single or multi-statement SQL script, CTE, DDL statement, or ORM output into the editor.
+              </p>
+            </div>
+            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm mb-3">
+                2
+              </div>
+              <h4 className="font-semibold text-slate-900 mb-1">Pick Database Dialect</h4>
+              <p className="text-sm text-slate-600">
+                Select your target dialect (Standard SQL, PostgreSQL, MySQL, or SQLite) for accurate identifier and function rules.
+              </p>
+            </div>
+            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm mb-3">
+                3
+              </div>
+              <h4 className="font-semibold text-slate-900 mb-1">Format & Copy</h4>
+              <p className="text-sm text-slate-600">
+                Click <strong>Format SQL</strong> to beautify, capitalize reserved keywords, and copy the clean query directly to your clipboard.
+              </p>
+            </div>
+          </div>
+        </section>
 
-        <h3 className="text-xl font-bold text-slate-900">
-          Frequently Asked Questions (FAQ)
-        </h3>
-        <div className="space-y-4">
-          <div className="bg-white p-4 rounded-xl border border-slate-200">
-            <h4 className="font-semibold text-slate-900 mb-1">Does this tool connect to my database?</h4>
-            <p className="text-sm text-slate-600">
-              No. This tool is purely a client-side lexical parser and formatter. It runs entirely inside your web browser and never connects to any database server, ensuring complete confidentiality of your schema and table names.
-            </p>
+        {/* Sección 3: Tabla Comparativa de Dialectos SQL */}
+        <section className="space-y-4">
+          <h3 className="text-xl font-bold text-slate-900">
+            SQL Dialect Comparison: Differences and Syntax Nuances
+          </h3>
+          <p className="text-sm text-slate-600">
+            Different database management systems implement their own dialect extensions. Here is how key syntax rules vary:
+          </p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm border border-slate-200 rounded-lg overflow-hidden bg-white">
+              <thead className="bg-slate-100 text-slate-900 font-semibold border-b border-slate-200">
+                <tr>
+                  <th className="p-3">Dialect</th>
+                  <th className="p-3">Identifier Quotes</th>
+                  <th className="p-3">String Literals</th>
+                  <th className="p-3">Pagination Syntax</th>
+                  <th className="p-3">Key Strengths</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200">
+                <tr>
+                  <td className="p-3 font-medium text-slate-900">PostgreSQL</td>
+                  <td className="p-3"><code>"column_name"</code></td>
+                  <td className="p-3"><code>'text'</code> or <code>$$dollar$$</code></td>
+                  <td className="p-3"><code>LIMIT n OFFSET m</code> or <code>FETCH FIRST</code></td>
+                  <td className="p-3">Advanced JSONB indexing, CTEs, custom types</td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-medium text-slate-900">MySQL / MariaDB</td>
+                  <td className="p-3"><code>`column_name`</code> (Backticks)</td>
+                  <td className="p-3"><code>'text'</code> or <code>"text"</code></td>
+                  <td className="p-3"><code>LIMIT offset, count</code></td>
+                  <td className="p-3">Widespread hosting adoption, fast read workloads</td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-medium text-slate-900">SQLite</td>
+                  <td className="p-3"><code>`col`</code>, <code>"col"</code>, or <code>[col]</code></td>
+                  <td className="p-3"><code>'text'</code></td>
+                  <td className="p-3"><code>LIMIT n OFFSET m</code></td>
+                  <td className="p-3">Serverless, embedded mobile apps, local testing</td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-medium text-slate-900">ANSI Standard</td>
+                  <td className="p-3"><code>"column_name"</code></td>
+                  <td className="p-3"><code>'text'</code></td>
+                  <td className="p-3"><code>OFFSET m ROWS FETCH NEXT n ROWS ONLY</code></td>
+                  <td className="p-3">Cross-engine portability across compliant engines</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div className="bg-white p-4 rounded-xl border border-slate-200">
-            <h4 className="font-semibold text-slate-900 mb-1">Can it format large SQL dump files?</h4>
-            <p className="text-sm text-slate-600">
-              Yes, it can handle large queries and multi-statement batches quickly. For files exceeding hundreds of megabytes, however, dedicated command-line utilities are recommended.
-            </p>
+        </section>
+
+        {/* Sección 4: Privacidad y Seguridad */}
+        <section className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <div className="flex items-center gap-2 text-slate-900 font-bold text-lg">
+            <ShieldCheck className="w-5 h-5 text-emerald-600" />
+            <span>Zero Database Connections & Schema Privacy</span>
           </div>
-        </div>
+          <p className="text-sm leading-relaxed text-slate-600">
+            Database queries often reveal proprietary database schemas, confidential column names, business logic, or customer criteria in <code>WHERE</code> clauses. 
+            DevToolbox executes lexical parsing and query reformatting exclusively on the client side using compiled JavaScript algorithms. At no point is any database connection established, nor are queries sent over the network to any third-party server.
+          </p>
+        </section>
+
+        {/* Sección 5: Preguntas Frecuentes (FAQ) */}
+        <section className="space-y-4">
+          <h3 className="text-xl font-bold text-slate-900">
+            Frequently Asked Questions (FAQ)
+          </h3>
+          <div className="space-y-3">
+            <div className="bg-white p-4 rounded-xl border border-slate-200">
+              <h4 className="font-semibold text-slate-900 mb-1">
+                Does formatting a SQL query alter its performance or execution plan?
+              </h4>
+              <p className="text-sm text-slate-600">
+                No. SQL engines strip comments, tabs, line breaks, and whitespace during the lexing and parsing phases before constructing the query optimization tree. A formatted query executes identically to its minified single-line equivalent.
+              </p>
+            </div>
+            <div className="bg-white p-4 rounded-xl border border-slate-200">
+              <h4 className="font-semibold text-slate-900 mb-1">
+                Why does this tool automatically capitalize keywords?
+              </h4>
+              <p className="text-sm text-slate-600">
+                Capitalizing keywords (like <code>SELECT</code>, <code>INSERT INTO</code>, <code>LEFT JOIN</code>) is the universal industry standard recommended by the SQL-92 specification. It visually separates SQL syntax commands from database-specific entities like table names and field aliases.
+              </p>
+            </div>
+            <div className="bg-white p-4 rounded-xl border border-slate-200">
+              <h4 className="font-semibold text-slate-900 mb-1">
+                Can I format complex queries with multiple Common Table Expressions (WITH clauses)?
+              </h4>
+              <p className="text-sm text-slate-600">
+                Yes. The underlying parser fully understands CTEs (<code>WITH ... AS (...)</code>), nested subqueries, recursive queries, and window functions (such as <code>ROW_NUMBER() OVER (...)</code>), structuring each block with proper relative indentation.
+              </p>
+            </div>
+          </div>
+        </section>
+
       </article>
     </div>
   );
