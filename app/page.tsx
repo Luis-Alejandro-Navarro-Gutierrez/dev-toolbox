@@ -4,6 +4,7 @@ import {
   Binary,
   FileCode,
   Database,
+  KeyRound,
   ArrowRight,
   ShieldCheck,
   Zap,
@@ -27,6 +28,14 @@ export default function Home() {
       href: "/base64-converter",
       icon: Binary,
       badge: "Fast",
+    },
+    {
+      title: "JWT Decoder & Inspector",
+      description:
+        "Decode, inspect, and debug JSON Web Tokens in real-time. Check expiration timestamps, header algorithms, and payload claims client-side.",
+      href: "/jwt-decoder",
+      icon: KeyRound,
+      badge: "New",
     },
     {
       title: "Markdown to HTML Converter",
@@ -66,10 +75,10 @@ export default function Home() {
         <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center justify-between">
           <span>Available Developer Tools</span>
           <span className="text-xs font-normal text-slate-500 uppercase tracking-wider">
-            4 Online Tools
+            5 Online Tools
           </span>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {tools.map((tool) => {
             const Icon = tool.icon;
             return (
