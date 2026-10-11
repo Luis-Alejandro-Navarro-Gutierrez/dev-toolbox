@@ -5,6 +5,7 @@ import {
   FileCode,
   Database,
   KeyRound,
+  LayoutGrid, // <-- Añadir este
   ArrowRight,
   ShieldCheck,
   Zap,
@@ -13,6 +14,14 @@ import {
 
 export default function Home() {
   const tools = [
+    {
+      title: "CSS Grid & Layout Builder",
+      description:
+        "Visually build and prototype 2D responsive CSS grid systems. Adjust tracks, gaps, and cell spans with live CSS and Tailwind code export.",
+      href: "/grid-generator",
+      icon: LayoutGrid,
+      badge: "Interactive",
+    },
     {
       title: "JSON Formatter & Validator",
       description:
@@ -75,7 +84,7 @@ export default function Home() {
         <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center justify-between">
           <span>Available Developer Tools</span>
           <span className="text-xs font-normal text-slate-500 uppercase tracking-wider">
-            5 Online Tools
+            6 Online Tools
           </span>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
