@@ -141,6 +141,9 @@ export default function Navbar() {
             >
               Contact
             </Link>
+            <Link href="/guides" className="text-sm font-semibold text-slate-700 hover:text-blue-600 transition">
+              Guides
+              </Link>
           </div>
         </div>
       )}
