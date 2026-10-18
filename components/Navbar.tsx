@@ -13,6 +13,7 @@ import {
   Menu,
   X,
   Wrench,
+  BookOpen,
 } from "lucide-react";
 
 export default function Navbar() {
@@ -84,6 +85,12 @@ export default function Navbar() {
               )}
             </div>
 
+            {/* Enlace a Guides en Escritorio */}
+            <Link href="/guides" className="text-sm font-semibold text-slate-700 hover:text-blue-600 transition flex items-center gap-1">
+              <BookOpen className="w-4 h-4 text-slate-500" />
+              <span>Guides</span>
+            </Link>
+
             <Link href="/about" className="text-sm font-semibold text-slate-700 hover:text-blue-600 transition">
               About
             </Link>
@@ -128,22 +135,27 @@ export default function Navbar() {
           </div>
           <div className="border-t border-slate-100 pt-3 flex flex-col gap-2">
             <Link
+              href="/guides"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-2 p-1"
+            >
+              <BookOpen className="w-4 h-4" />
+              <span>Engineering Guides</span>
+            </Link>
+            <Link
               href="/about"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm font-semibold text-slate-700 hover:text-blue-600"
+              className="text-sm font-semibold text-slate-700 hover:text-blue-600 p-1"
             >
               About
             </Link>
             <Link
               href="/contact"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm font-semibold text-slate-700 hover:text-blue-600"
+              className="text-sm font-semibold text-slate-700 hover:text-blue-600 p-1"
             >
               Contact
             </Link>
-            <Link href="/guides" className="text-sm font-semibold text-slate-700 hover:text-blue-600 transition">
-              Guides
-              </Link>
           </div>
         </div>
       )}
